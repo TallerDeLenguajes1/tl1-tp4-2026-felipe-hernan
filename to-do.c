@@ -25,7 +25,7 @@ void MoverTarea(Nodo **Start1,Nodo **Start2,int id);
 void BuscarTareaPorID(Nodo ** Start1,Nodo ** Start2,int id);
 void BuscarTareaPorNombre(Nodo ** Start1,Nodo ** Start2,char *clave);
 void mostrarUnaTarea(Tarea tarea);
-
+void liberarMemoria(Nodo **tarea);
 
 int main(){
 
@@ -40,6 +40,7 @@ int main(){
     Tarea T3 = {1002,"ooooo",87};
     Tarea T4 = {1003,"www",63};
     */
+   //crea cada tarea
     do
     {
         printf("\nAgregando tarea ......\n");
@@ -93,7 +94,7 @@ int main(){
         MoverTarea(&TareasPendientes,&TareasRealizadas,id);
         printf("\n-----Tareas pendientes -----");
         mostrarTareas(TareasPendientes);
-        printf("\nDesea mover mas tareas?\n1 - si\n0 - no");
+        printf("\nDesea mover mas tareas?\n1 - si\n0 - no\n");
         scanf("%d",&control);
         limpiarBuffer();
     } while (control == 1);
@@ -127,6 +128,26 @@ int main(){
         break;
     }
 
+    //libera memoria reservada
+    //en lista de pendientes
+    liberarMemoria(&TareasPendientes);
+
+    //en lista de realizadas
+    liberarMemoria(&TareasRealizadas);
+
+}
+
+void liberarMemoria(Nodo **tarea){
+
+    Nodo **NodoAux = tarea,*temp;
+    while (*NodoAux)
+    {
+        free((*NodoAux)->T.Descripcion);
+        temp = *NodoAux;
+        *NodoAux = (*NodoAux)->Siguiente;
+        temp->Siguiente = NULL;
+        free(temp);
+    }
 }
 
 void limpiarBuffer(){
