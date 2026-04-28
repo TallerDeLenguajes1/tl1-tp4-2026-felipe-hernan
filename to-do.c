@@ -34,13 +34,14 @@ int main(){
     Tarea nuevaTarea;
     char descripcion[120];
 
-    /*
+    
     Tarea T1 = {1000,"llll",43};
     Tarea T2 = {1001,"bbbb",23};
     Tarea T3 = {1002,"ooooo",87};
     Tarea T4 = {1003,"www",63};
-    */
+    
    //crea cada tarea
+    
     do
     {
         printf("\nAgregando tarea ......\n");
@@ -74,6 +75,7 @@ int main(){
         limpiarBuffer();
         IDTarea++;
     } while (control == 1);
+    
     /*
     InsertarTarea(&TareasPendientes,crearTarea(T1));
     InsertarTarea(&TareasRealizadas,crearTarea(T2));
@@ -86,6 +88,7 @@ int main(){
     mostrarTareas(TareasRealizadas);
 
     //mueve tereas de pendientes a realizadas
+
     do
     {
         printf("\nIngrese el ID de la tarea a mover: ");
@@ -105,6 +108,7 @@ int main(){
     mostrarTareas(TareasPendientes);
 
     //consulta de tareas
+    
     do
     {
         printf("Consultar tareas por\n1 -ID\n2 -palabra clave\n");// ingresa las opciones a buscar
@@ -240,23 +244,30 @@ Tarea BuscarTareaP(Nodo ** Start,char *clave)
 }
 void MoverTarea(Nodo **Start1,Nodo **Start2,int id){
 
+    
+    Nodo *nodoAux = (*Start1);
+    Nodo *nodoAnt = NULL;
     //se busca la tarea a mover
-    Nodo ** aux1 = Start1;
-    while (*aux1 && (*aux1)->T.TareaID != id)
+    while (nodoAux!=NULL && nodoAux->T.TareaID != id)
     {
-        aux1 = &(*aux1)->Siguiente;
+        nodoAnt = nodoAux;
+        nodoAux = nodoAux->Siguiente;
     }
-    if (*aux1)
+    if (nodoAux != NULL)
     {
-        //se elimina la tarea de la lista de tareas pendientes
-        Nodo *temp = *aux1;  // Guardamos el nodo a cambiar de lista en una variable temporal.
-        *aux1 = (*aux1)->Siguiente;  // Desvinculamos el nodo de la lista .
-
-        //se carga a la lista de tareas realizadas
-        temp->Siguiente =*Start2;
-        *Start2 = temp;
+        //se redirecciona el nodo al siguiente de la lista de pendientes
+        if (nodoAux == (*Start1))
+        {
+            (*Start1) = nodoAux->Siguiente; // el segundo elemento de la lista es la cabecera de la lista de pendientes
+        }else{
+            nodoAnt->Siguiente =nodoAux->Siguiente; // se salta al nodo siguiente
+        }
         
-        printf("Tarea movia a tareas realizadas\n");
+        //se carga a la lista de tareas realizadas
+        nodoAux->Siguiente =*Start2; // el nodo sacado de la lista de pendientes se pasa a la lista de realizadas
+        *Start2 = nodoAux; //la cabecera de la lista de realizadas apunta al nodo sacado de la lista de pendientes
+        
+        printf("La tarea se movio a tareas realizadas\n");
     }else{
         printf("No se encontro la tarea\n");
     }
